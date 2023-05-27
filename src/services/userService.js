@@ -90,7 +90,6 @@ let createNewUser = (data) => {
                         "Your email is already in used, plz try another email!",
                 });
             } else {
-                console.log("Point");
                 let hashPasswordFromBcrypt = await hashUserPassword(
                     data.password
                 );
