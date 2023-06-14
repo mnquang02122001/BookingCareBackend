@@ -164,6 +164,34 @@ let getDetailDoctorById = (id) => {
                             as: "positionData",
                             attributes: ["valueEn", "valueVi"],
                         },
+                        {
+                            model: db.Doctor_Infor,
+                            attributes: {
+                                exclude: ["id", "doctorId"],
+                            },
+                            include: [
+                                {
+                                    model: db.Allcode,
+                                    as: "priceTypeData",
+                                    attributes: ["valueEn", "valueVi"],
+                                },
+                                {
+                                    model: db.Allcode,
+                                    as: "provinceTypeData",
+                                    attributes: ["valueEn", "valueVi"],
+                                },
+                                {
+                                    model: db.Allcode,
+                                    as: "paymentTypeData",
+                                    attributes: ["valueEn", "valueVi"],
+                                },
+                            ],
+                            // attributes: [
+                            //     "description",
+                            //     "contentHTML",
+                            //     "contentMarkdown",
+                            // ],
+                        },
                     ],
                     raw: false,
                     nest: true,
@@ -254,6 +282,51 @@ let getScheduleByDate = (doctorId, date) => {
         }
     });
 };
+let getExtraInforDoctorById = (doctorId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!doctorId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing required parameters",
+                });
+            } else {
+                let data = await db.Doctor_Infor.findOne({
+                    where: { doctorId },
+                    attributes: {
+                        exclude: ["id", "doctorId"],
+                    },
+                    include: [
+                        {
+                            model: db.Allcode,
+                            as: "priceTypeData",
+                            attributes: ["valueEn", "valueVi"],
+                        },
+                        {
+                            model: db.Allcode,
+                            as: "provinceTypeData",
+                            attributes: ["valueEn", "valueVi"],
+                        },
+                        {
+                            model: db.Allcode,
+                            as: "paymentTypeData",
+                            attributes: ["valueEn", "valueVi"],
+                        },
+                    ],
+                    raw: false,
+                    nest: true,
+                });
+                if (!data) data = [];
+                resolve({
+                    errCode: 0,
+                    data,
+                });
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 module.exports = {
     getTopDoctorHome,
     getAllDoctors,
@@ -261,4 +334,5 @@ module.exports = {
     getDetailDoctorById,
     bulkCreateSchedule,
     getScheduleByDate,
+    getExtraInforDoctorById,
 };
