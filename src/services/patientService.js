@@ -1,4 +1,4 @@
-import db from "../models/index";
+import db from "../models";
 import emailService from "./emailService";
 import dotenv from "dotenv";
 import { v4 as uuidv4 } from "uuid";
@@ -65,7 +65,6 @@ let postBookAppointment = (data) => {
 };
 let postVerifyBookAppointment = (data) => {
     return new Promise(async (resolve, reject) => {
-        console.log(data);
         try {
             if (!data.token || !data.doctorId) {
                 resolve({

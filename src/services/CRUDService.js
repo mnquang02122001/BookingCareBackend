@@ -1,5 +1,5 @@
-import bcrypt from 'bcryptjs';
-import db from '../models/index';
+import bcrypt from "bcryptjs";
+import db from "../models";
 const salt = bcrypt.genSaltSync(10);
 let createNewUser = async (data) => {
     return new Promise(async (resolve, reject) => {
@@ -12,10 +12,10 @@ let createNewUser = async (data) => {
                 lastName: data.lastName,
                 address: data.address,
                 phoneNumber: data.phoneNumber,
-                gender: data.gender === '1' ? true : false,
+                gender: data.gender === "1" ? true : false,
                 roleId: data.roleId,
             });
-            resolve('ok create a new user successfully');
+            resolve("ok create a new user successfully");
         } catch (error) {
             reject(error);
         }
