@@ -48,6 +48,10 @@ let initWebRoutes = (app) => {
         "/api/get-profile-doctor-by-id",
         doctorController.getProfileDoctorById
     );
+    router.get(
+        "/api/get-list-patient-for-doctor",
+        doctorController.getListPatientForDoctor
+    );
     router.post(
         "/api/patient-book-appointment",
         patientController.postBookAppointment
@@ -72,6 +76,7 @@ let initWebRoutes = (app) => {
         "/api/get-detail-clinic-by-id",
         clinicController.getDetailClinicById
     );
+
     return app.use("/", router);
 };
 
