@@ -65,6 +65,61 @@ let getBodyHTMLEmail = (dataSend) => {
     }
     return result;
 };
+let sendAttachment = async (dataSend) => {
+    const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        secure: false,
+        auth: {
+            // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+            user: process.env.EMAIL_APP,
+            pass: process.env.EMAIL_APP_PASSWORD,
+        },
+    });
+
+    // async..await is not allowed in global scope, must use a wrapper
+
+    // send mail with defined transport object
+    const info = await transporter.sendMail({
+        from: '"Mai Nhat Quang" <mnquang123@gmail.com>', // sender address
+        to: dataSend?.email, // list of receivers
+        subject:
+            dataSend?.language === "vi"
+                ? "Kết quả đặt lịch khám bệnh"
+                : "Medical appointment result", // Subject line
+        html: getBodyHTMLEmailRemedy(dataSend), // html body
+        attachments: [
+            {
+                filename: `prescription-${
+                    dataSend.patientId
+                }-${new Date().getTime()}.png`,
+                content: dataSend.imgBase64.split("base64,")[1],
+                encoding: "base64",
+            },
+        ],
+    });
+};
+let getBodyHTMLEmailRemedy = (dataSend) => {
+    let result = "";
+    if (dataSend?.language === "vi") {
+        result = `
+        <h3>Xin chào ${dataSend.patientName}</h3>
+        <h4>Bạn nhận được email này vì đã đặt lịch khám bệnh online trên Booking care thành công</h4>
+        <p>Thông tin đơn thuốc/hóa đơn được gửi trong file đính kèm</p>
+        <div>Xin chân thành cảm ơn</div>
+        `;
+    }
+    if (dataSend?.language === "en") {
+        result = `
+        <h3>Dear ${dataSend.patientName}</h3>
+        <h4>You received this email because you successfully booked an online medical appointment on Booking care</h4>
+        <p>Prescription/invoice information is sent in the attached file</p>
+        <div>Best regards</div>
+        `;
+    }
+    return result;
+};
 module.exports = {
     sendSimpleEmail,
+    sendAttachment,
 };
