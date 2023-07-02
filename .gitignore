@@ -2,5 +2,6 @@
 /vendor
 /.idea
 .idea/
+/build
 .env
 package-lock.json

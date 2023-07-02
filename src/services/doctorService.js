@@ -33,6 +33,10 @@ let getTopDoctorHome = (limit) => {
                 errCode: 0,
                 data: users,
             });
+            resolve({
+                errCode: 0,
+                data: users,
+            });
         } catch (error) {
             reject(error);
         }

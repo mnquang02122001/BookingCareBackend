@@ -8,6 +8,7 @@ let getTopDoctorHome = async (req, res) => {
         let response = await doctorService.getTopDoctorHome(+limit);
         return res.status(200).json(response);
     } catch (error) {
+        console.log("Fix those shits");
         console.log(error);
         return res.status(200).json({
             errCode: -1,
