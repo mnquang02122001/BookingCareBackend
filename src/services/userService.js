@@ -205,7 +205,7 @@ let getAllCodeService = (type) => {
                 res.errMessage = "Missing required parameters!";
             } else {
                 let allcode = await db.Allcode.findAll({
-                    where: { type },
+                    where: { type: type.toUpperCase() },
                 });
                 res.errCode = 0;
                 res.data = allcode;

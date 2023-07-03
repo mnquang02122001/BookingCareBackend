@@ -25,6 +25,17 @@ let getTopDoctorHome = (limit) => {
                         as: "genderData",
                         attributes: ["valueEn", "valueVi"],
                     },
+                    {
+                        model: db.Doctor_Infor,
+                        attributes: ["specialtyId"],
+                        include: [
+                            {
+                                model: db.Specialty,
+                                as: "specialtyData",
+                                attributes: ["name"],
+                            },
+                        ],
+                    },
                 ],
                 raw: false,
                 nest: true,
@@ -255,15 +266,19 @@ let bulkCreateSchedule = (data) => {
                     });
                 }
                 //get all existing data
+                //data.formatedDate
                 let existing = await db.Schedule.findAll({
-                    where: { doctorId: data.doctorId, date: data.formatedDate },
+                    where: {
+                        doctorId: data.doctorId,
+                        date: data.formatedDate + "",
+                    },
                     attributes: ["timeType", "date", "doctorId", "maxNumber"],
                 });
                 //compare difference between schedule data and existing data
                 let toCreate = _.differenceWith(schedule, existing, (a, b) => {
-                    return a.timeType === b.timeType && +a.date === +b.date;
+                    return a.timeType == b.timeType && +a.date == +b.date;
                 });
-                //create different data and insert to db
+                // //create different data and insert to db
                 if (toCreate && toCreate.length > 0) {
                     await db.Schedule.bulkCreate(toCreate);
                 }
@@ -520,6 +535,38 @@ let sendRemedy = (data) => {
         }
     });
 };
+let cancelAppointment = (bookingId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!bookingId) {
+                resolve({
+                    errCode: 1,
+                    errMessage: "Missing required parameter",
+                });
+            } else {
+                let booking = await db.Booking.findOne({
+                    where: { id: bookingId, statusId: "S2" },
+                    raw: false,
+                });
+                if (booking) {
+                    booking.statusId = "S4";
+                    await booking.save();
+                    resolve({
+                        errCode: 0,
+                        errMessage: "Ok",
+                    });
+                } else {
+                    resolve({
+                        errCode: -1,
+                        errMessage: "No booking found",
+                    });
+                }
+            }
+        } catch (error) {
+            reject(error);
+        }
+    });
+};
 module.exports = {
     getTopDoctorHome,
     getAllDoctors,
@@ -531,4 +578,5 @@ module.exports = {
     getProfileDoctorById,
     getListPatientForDoctor,
     sendRemedy,
+    cancelAppointment,
 };

@@ -27,6 +27,10 @@ module.exports = (sequelize, DataTypes) => {
                 targetKey: "keyMap",
                 as: "paymentTypeData",
             });
+            Doctor_Infor.belongsTo(models.Specialty, {
+                foreignKey: "specialtyId",
+                as: "specialtyData",
+            });
         }
     }
     Doctor_Infor.init(

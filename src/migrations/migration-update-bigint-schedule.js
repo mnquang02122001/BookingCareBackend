@@ -1,18 +1,20 @@
 module.exports = {
     up: (queryInterface, Sequelize) => {
         return Promise.all([
-            queryInterface.changeColumn("Schedules", "date", {
+            queryInterface.changeColumn("Users", "image", {
                 // type: Sequelize.BLOB("long"),
-                type: Sequelize.BIGINT,
+                type: Sequelize.BLOB,
+                allowNull: true,
             }),
         ]);
     },
 
     down: (queryInterface, Sequelize) => {
         return Promise.all([
-            queryInterface.changeColumn("Schedules", "date", {
+            queryInterface.changeColumn("Users", "image", {
                 // type: Sequelize.BLOB("long"),
-                type: Sequelize.BIGINT,
+                type: Sequelize.BLOB,
+                allowNull: true,
             }),
         ]);
     },
